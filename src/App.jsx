@@ -1,10 +1,18 @@
 import React from 'react'
+import Header from './components/Navbar'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Signup from './pages/Signup'
+import Dashboard from './pages/Dashboard'
+
 
 const App = () => {
   return (
-    <div>
-      <h1>HELLO BUN</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Signup/>} />
+        <Route path='/dashboard' element={<Dashboard/>} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
