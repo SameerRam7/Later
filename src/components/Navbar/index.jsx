@@ -1,12 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import "./style.css"
 import Logo from '../../assets/Logo.png'
 import Notification from '../../assets/notification.png'
+import { auth } from '../../Firebase'
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { getAuth, signOut } from 'firebase/auth'
 
 
 const Navbar = () => {
+  const [user, loading] = useAuthState(auth);
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(user){
+      navigate("/dashboard");
+    }
+  },[user,loading])
   function logoutFunc() {
-    alert("Logout!")
+   try {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      // Sign-out successful.
+      navigate("/");
+      toast.success("Logged Out Succesfully")
+    }).catch((error) => {
+      // An error happened.
+      toast.error(error.message)
+    });
+   } catch(e) {
+    toast.error(e.message)
+   }
   }
   return (
     <div className='bg-black sticky top-0 left-0  flex justify-between items-center'>
@@ -26,7 +50,8 @@ const Navbar = () => {
        <ul className='text-white flex gap-4'>
         <li> <img src={Notification} alt="" className='w-[45px]'/> </li>
         <li>Profile</li>
-        <li onClick={logoutFunc} className=' cursor-pointer opacity-[1] hover:opacity-[0.7] hover:transition duration-500 mr-6'>Logout</li>
+        {user &&
+        <li onClick={logoutFunc} className=' cursor-pointer opacity-[1] hover:opacity-[0.7] hover:transition duration-500 mr-6'>Logout</li>}
        </ul>
 
 
