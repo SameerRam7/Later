@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
-    <>
+    <div className='bg-black h-lvh'>
     <ToastContainer/>
     <BrowserRouter>
       <Routes>
@@ -15,7 +15,7 @@ const App = () => {
         <Route path='/dashboard' element={<Dashboard/>} />
       </Routes>
     </BrowserRouter>
-    </>
+    </div>
   )
 }
 
