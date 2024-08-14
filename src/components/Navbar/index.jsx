@@ -33,7 +33,7 @@ const Navbar = () => {
    }
   }
   return (
-    <div className='bg-black sticky top-0 left-0  flex justify-between items-center'>
+    <div className='bg-black sticky top-0 left-0 z-[100]  flex justify-between items-center'>
       <img src={Logo} className='mx-2 w-24 h-24  '/>
        <p className=' text-white text-2xl px-7 -ml-20 font-Mons font-black'>  WalletWise.</p>
 
@@ -48,8 +48,8 @@ const Navbar = () => {
 
       <img src="" alt="" className=''/>
        <ul className='text-white flex gap-4'>
-        <li> <img src={Notification} alt="" className='w-[45px]'/> </li>
-        <li>Profile</li>
+        {/* <li> <img src={Notification} alt="" className='w-[45px]'/> </li> */}
+        {/* <li>Profile</li> */}
         {user &&
         <li onClick={logoutFunc} className=' cursor-pointer opacity-[1] hover:opacity-[0.7] hover:transition duration-500 mr-6'>Logout</li>}
        </ul>

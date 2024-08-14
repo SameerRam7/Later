@@ -9,13 +9,19 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../Firebase';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import TransactionTable from '../components/TransactionsTable';
 
 const Dashboard = () => {
-  const [transaction,setTransaction] = useState([]);
+  const [transactions,setTransactions] = useState([]);
   const [loading,setLoading] = useState(false);
   const [user]=useAuthState(auth)
   const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
+
+  const [income,setIncome ] = useState(0);
+  const [expense,setExpense ] = useState(0);
+  const [totalBalance,setTotalBalance ] = useState(0);
+
 
   const showExpenseModal = () =>{
     setIsExpenseModalVisible(true);
@@ -53,19 +59,45 @@ try {
   );
   console.log("Document written with ID: ",docRef.id)
   toast.success("Transaction Added!")
+  let newArr = transactions;
+  newArr.push(transaction);
+  setTransactions(newArr)
+  calculateBalance();
   
 } catch(e) {
   console.error("Error adding document:",e);
-    toast.error("Couldn't add transaction");
+    toast.error("Couldn't add transactions");
   
 }
   }
+
+  
 
   useEffect(() => {
     //Get all the docs from a collection
     fetchTransactions();
   },[])
+
+  useEffect(() => {
+    calculateBalance();
+  }, [transactions])
   
+  const calculateBalance = () =>{
+    let incomeTotal =0;
+    let expensesTotal = 0;
+
+    transactions.forEach((transaction)=>{
+      if(transaction.type === "income"){
+        incomeTotal += transaction.amount;
+      } else{
+        expensesTotal += transaction.amount;
+      }
+    });
+    setIncome(incomeTotal);
+    setExpense(expensesTotal);
+    setTotalBalance(incomeTotal - expensesTotal)
+  }
+
 async function fetchTransactions() {
   setLoading(true);
   if(user){
@@ -76,7 +108,7 @@ async function fetchTransactions() {
       //doc.data() is never undefined for query doc snapshots
       transactionsArray.push(doc.data());
     });
-    setTransaction(transactionsArray);
+    setTransactions(transactionsArray);
     console.log("Transaction Array",transactionsArray)
     toast.success("Transactions Fetched!");
 
@@ -91,6 +123,9 @@ async function fetchTransactions() {
       <p>Loading....</p>
       </> :<>
       <Cards
+      income={income}
+      expense={expense}
+      totalBalance={totalBalance}
       showExpenseModal={showExpenseModal}
       showIncomeModal={showIncomeModal}
       />
@@ -105,6 +140,8 @@ async function fetchTransactions() {
       handleIncomeCancel={handleIncomeCancel}
       onFinish={onFinish}
       />
+
+      <TransactionTable transactions={transactions}/>
       </>
 }
       </div>
