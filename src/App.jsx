@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
-    <div className='bg-black h-lvh'>
+    <div className='bg-black h-full'>
     <ToastContainer/>
     <BrowserRouter>
       <Routes>

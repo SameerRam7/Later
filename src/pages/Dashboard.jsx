@@ -10,6 +10,8 @@ import { auth, db } from '../Firebase';
 import moment from 'moment';
 import { toast } from 'react-toastify';
 import TransactionTable from '../components/TransactionsTable';
+import ChartComponent from '../components/Chart';
+import NoTransactions from '../components/NoTransactions';
 
 const Dashboard = () => {
   const [transactions,setTransactions] = useState([]);
@@ -50,7 +52,7 @@ const Dashboard = () => {
     addTransaction(newTransaction);
   }
 
-  async function addTransaction(transaction){
+  async function addTransaction(transaction, many){
     //Add the doc
 try {
   const docRef = await addDoc(
@@ -58,7 +60,7 @@ try {
     transaction
   );
   console.log("Document written with ID: ",docRef.id)
-  toast.success("Transaction Added!")
+  if(!many) toast.success("Transaction Added!")
   let newArr = transactions;
   newArr.push(transaction);
   setTransactions(newArr)
@@ -66,7 +68,7 @@ try {
   
 } catch(e) {
   console.error("Error adding document:",e);
-    toast.error("Couldn't add transactions");
+  if(!many) toast.error("Couldn't add transactions");
   
 }
   }
@@ -76,7 +78,7 @@ try {
   useEffect(() => {
     //Get all the docs from a collection
     fetchTransactions();
-  },[])
+  },[user])
 
   useEffect(() => {
     calculateBalance();
@@ -116,6 +118,10 @@ async function fetchTransactions() {
   setLoading(false);
 }
 
+let sortedTransactions = transactions.sort((a,b) => {
+    return new Date(a.date)- new Date(b.date);
+})
+
   return (
     <div /* style={{height:"100%"} }*/> 
       <Navbar/>
@@ -129,6 +135,7 @@ async function fetchTransactions() {
       showExpenseModal={showExpenseModal}
       showIncomeModal={showIncomeModal}
       />
+      {transactions.length !=0 ? <ChartComponent sortedTransactions={sortedTransactions}/> :<NoTransactions/>} 
       
       <AddExpense
       isExpenseModalVisible={isExpenseModalVisible}
@@ -141,7 +148,9 @@ async function fetchTransactions() {
       onFinish={onFinish}
       />
 
-      <TransactionTable transactions={transactions}/>
+      <TransactionTable transactions={transactions}
+      addTransaction={addTransaction}
+      fetchTransactions={fetchTransactions}/>
       </>
 }
       </div>
