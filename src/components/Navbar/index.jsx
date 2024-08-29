@@ -37,11 +37,11 @@ const Navbar = () => {
   return (
     <div className="bg-black sticky top-0 left-0 z-[100]  flex justify-between items-center">
       <img src={Logo} className="mx-2 w-24 h-24  " />
-      <p className=" text-white text-2xl px-7 -ml-20 font-Mons font-black">
+      
+      {user?<> <p className=" text-white text-2xl -ml-[85px] font-Mons font-black"> {/* When the user is logged in then the position of LOGO is */}
         {" "}
         WalletWise.
-      </p>
-
+      </p> 
       <div className="flex bg-[#242323] items-center rounded-full px-3 pr-10 mr-96">
         <button className="bg-[#242323] text-white cursor-pointer hover:text-[#808080] hover:transition duration-[0.6s]">
           <svg
@@ -66,6 +66,13 @@ const Navbar = () => {
           className="bg-[#242323] text-white flex-1 rounded-full p-[10px] outline-none  font-medium hover:placeholder:text-[#808080] placeholder:hover:duration-200 "
         />
       </div>
+      </>: 
+      <p className=" text-white text-2xl -ml-[33.1rem] font-Mons font-black"> {/* When the user is logged out then the position of LOGO is */}
+      {" "}
+      WalletWise.
+    </p>}
+
+      
 
     {/* {user &&
         (
